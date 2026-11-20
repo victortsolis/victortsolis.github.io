@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://victortsolis.github.io/sitemap.xml
