@@ -56,9 +56,19 @@
     window.dataLayer = window.dataLayer || [];
     gtag('consent', 'default', {analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied'});
     gtag('js', new Date());
+    // Keep the README campaign, and leave unrelated query values out of Analytics.
+    const pageLocation = new URL(location.pathname, location.origin);
+    const incoming = new URLSearchParams(location.search);
+    const readmeLanguage = incoming.get('utm_content');
+    if (incoming.get('utm_source') === 'github' && incoming.get('utm_medium') === 'referral' &&
+        incoming.get('utm_campaign') === 'readme' && ['en', 'es'].includes(readmeLanguage)) {
+      pageLocation.search = new URLSearchParams({
+        utm_source: 'github', utm_medium: 'referral', utm_campaign: 'readme', utm_content: readmeLanguage
+      }).toString();
+    }
     gtag('config', measurementId, {
       allow_google_signals: false, allow_ad_personalization_signals: false,
-      page_location: location.origin + location.pathname,
+      page_location: pageLocation.href,
       page_referrer: document.referrer ? new URL(document.referrer).origin : ''
     });
     const script = document.createElement('script');
